@@ -1,6 +1,31 @@
 <?php
 $koneksi = mysqli_connect("localhost","root","","ujikom-12rpl2-zibriliant");
-$data = mysqli_query($koneksi,"SELECT * FROM input_aspirasi ORDER BY tanggal DESC");
+
+// Ambil kata kunci pencarian
+$cari = isset($_GET['cari']) ? mysqli_real_escape_string($koneksi, $_GET['cari']) : '';
+
+// Query data
+if($cari != ''){
+    $data = mysqli_query($koneksi,"
+        SELECT ia.*, k.ket_kategori 
+        FROM input_aspirasi ia
+        LEFT JOIN kategori k ON ia.id_kategori = k.id_kategori
+        WHERE ia.id_pelaporan LIKE '%$cari%'
+        OR ia.nis LIKE '%$cari%'
+        OR k.ket_kategori LIKE '%$cari%'
+        OR ia.lokasi LIKE '%$cari%'
+        OR ia.keterangan LIKE '%$cari%'
+        OR ia.tanggal LIKE '%$cari%'
+        ORDER BY ia.tanggal DESC
+    ");
+} else {
+    $data = mysqli_query($koneksi,"
+        SELECT ia.*, k.ket_kategori 
+        FROM input_aspirasi ia
+        LEFT JOIN kategori k ON ia.id_kategori = k.id_kategori
+        ORDER BY ia.tanggal DESC
+    ");
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +53,6 @@ body{
   padding:25px 35px 35px;
 }
 
-/* header */
 .header{
   display:flex;
   justify-content:space-between;
@@ -48,7 +72,6 @@ body{
   font-size:16px;
 }
 
-/* tabel */
 .table-box{
   background:#eee;
   border:3px solid #222;
@@ -71,7 +94,6 @@ th{
   background:#e6e6e6;
 }
 
-/* status */
 .status{
   background:#ffe082;
   padding:3px 10px;
@@ -81,7 +103,6 @@ th{
   font-size:14px;
 }
 
-/* tombol detail */
 .detail-btn{
   border:2px solid #222;
   padding:5px 15px;
@@ -102,7 +123,11 @@ th{
 <div class="container">
 
 <div class="header">
-<input type="text" class="search" placeholder="Cari">
+
+<form method="GET">
+<input type="text" name="cari" class="search" placeholder="Cari..." value="<?= $cari ?>">
+</form>
+
 <div class="title">LAPORAN PENGADUAN</div>
 </div>
 
@@ -118,17 +143,21 @@ th{
 <th>Status</th>
 <th>Detail</th>
 </tr>
-<?php $no=1; while($row=mysqli_fetch_assoc($data)){ ?>
+
+<?php 
+$no = 1; // nomor urut tampilan
+while($row=mysqli_fetch_assoc($data)){ 
+?>
 <tr>
-<td><?= $no++ ?></td>
+<td><?= $no++ ?></td> <!-- nomor urut di layar -->
 <td><?= date('d-m-Y', strtotime($row['tanggal'])) ?></td>
 <td><?= $row['nis'] ?></td>
-<td><?= $row['id_kategori'] ?></td>
+<td><?= $row['ket_kategori'] ?></td>
 <td><?= $row['lokasi'] ?></td>
 <td><?= $row['keterangan'] ?></td>
 <td><span class="status">Diproses</span></td>
 <td>
-<a href="detail.php?id=<?= $row['id_pelaporan'] ?>" class="detail-btn">Detail</a>
+<a href="detail-aspirasi.php?id=<?= $row['id_pelaporan'] ?>" class="detail-btn">Detail</a>
 </td>
 </tr>
 <?php } ?>
