@@ -25,12 +25,13 @@ label{
 }
 
 input[type=text],input[type=password]{
-    width:100%;
-    padding:10px;
+    width:250px;
+    padding:8px 10px;
     margin-top:5px;
     margin-bottom:15px;
-    border-radius:8px;
+    border-radius:10px;
     border:2px solid #444;
+    display:block;
 }
 
 .btn{
