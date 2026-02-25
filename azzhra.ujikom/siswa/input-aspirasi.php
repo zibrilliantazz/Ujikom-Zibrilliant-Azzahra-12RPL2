@@ -105,7 +105,7 @@ input, select{
 </div>
 
 <div class="form-row">
-<label>Id Kategori</label>
+<label>Kategori</label>
 <div class="titik">:</div>
 <select name="id_kategori" required>
   <option value="">Pilih kategori</option>
