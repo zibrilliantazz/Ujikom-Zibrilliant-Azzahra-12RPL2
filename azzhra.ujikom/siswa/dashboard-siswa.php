@@ -1,7 +1,8 @@
 <?php
 session_start();
-if(!isset($_SESSION['id'])){
-    header("Location: login.php");
+
+if(!isset($_SESSION['username']) || $_SESSION['role'] != 'siswa'){
+    header("Location: ../login.php");
     exit;
 }
 ?>
@@ -76,9 +77,6 @@ body{
   transition:0.15s;
 }
 
-.btn:hover{
-  transform:scale(1.05);
-}
 
 .hijau{ background:#a8e6b0; }
 .kuning{ background:#f6e39c; }
@@ -102,7 +100,7 @@ body{
 <a href="data-aspirasi.php" class="btn kuning">DATA ASPIRASI</a>
 </div>
 
-<a href="ganti_password.php" class="btn merah">GANTI PASSWORD</a>
+<a href="ganti-password.php" class="btn merah">GANTI PASSWORD</a>
 
 </div>
 
